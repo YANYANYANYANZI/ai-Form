@@ -35,7 +35,8 @@ graph TD
         MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
     end
 
-    graph TD
+
+
     subgraph 前端 (React + Vite) - 脆弱的状态缝合怪
         UI[UI 三栏布局]
         FS[FortuneSheet 表格] -->|防抖延迟| API_Save
@@ -121,4 +122,5 @@ Plaintext
 
 🎯 结论
 这是一个典型的“为了证明可行性而牺牲一切工程严谨性”的堆砌产物。如果作为毕业设计或者技术验证原型，它勉强够格；如果想拿去商业化或应对真实的复杂业务，建议直接 rm -rf 从头重构基础设施。
+
 
