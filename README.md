@@ -6,7 +6,8 @@
 🏗️ 所谓“完整”的架构图 (Architecture Illusion)
 这是一张画大饼的架构图。图上画得很美，但实际上中间件（Celery/Redis/DuckDB）目前全在“摸鱼”或者根本没接入，真实的流量全靠 FastAPI 单节点同步阻塞硬抗。
 
-代码段
+
+```
 graph TD
     subgraph 前端 (React + Vite) - 脆弱的状态缝合怪
         UI[UI 三栏布局]
@@ -33,9 +34,38 @@ graph TD
         PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
         MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
     end
+
+    graph TD
+    subgraph 前端 (React + Vite) - 脆弱的状态缝合怪
+        UI[UI 三栏布局]
+        FS[FortuneSheet 表格] -->|防抖延迟| API_Save
+        Chat[DeepSeek Copilot] -->|同步阻塞调用| API_Chat
+        Charts[ECharts 动态渲染]
+    end
+
+    subgraph 网关层 (FastAPI) - 随时会被打满的单点
+        API_Save[POST /sheet/save/] --> PG[(PostgreSQL)]
+        API_Chat[POST /chat/] --> LangGraph
+        API_WS[WS /ws/{id}] -.-> |写了但没用的废代码| Redis_PubSub
+        API_Upload[POST /upload/] --> MemDB[(玩具级内存知识库)]
+    end
+
+    subgraph Agent 层 (LangGraph) - 缓慢的推理黑盒
+        LangGraph --> Planner[意图路由: 画图/改表/QA]
+        Planner --> SQLAgent[SQL 生成]
+        SQLAgent --> Reviewer[AST 拦截与查询]
+        Reviewer --> BIRender[ECharts JSON 生成]
+    end
+
+    subgraph 数据底座 - 存在单点故障风险
+        PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
+        MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
+    end
+```
+
 📂 目录结构树与文件内部剖析 (Directory Structure & Code Debt)
 不要被看似规范的 DDD（领域驱动设计）目录骗了。里面充斥着过度耦合的逻辑和待重构的技术债。
-
+```
 Plaintext
 📦 ai-Form
  ┣ 📂 frontend                 # 前端微服务 (勉强能跑的 React 缝合怪)
@@ -68,6 +98,8 @@ Plaintext
  ┣ 📂 deploy                   # 部署文件 (纸上谈兵)
  ┣ 📜 requirements.txt         # 后端依赖清单。
  ┗ 📜 .gitignore               # 唯一能看的文件，防止你把 API Key 和 node_modules 传上去裸奔。
+```
+
 📉 客观差距分析 (Gap Analysis / The Harsh Reality)
 如果你想接手这个项目，请先了解你要面对的烂摊子：
 
