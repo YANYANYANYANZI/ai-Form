@@ -7,6 +7,7 @@
 这是一张画大饼的架构图。图上画得很美，但实际上中间件（Celery/Redis/DuckDB）目前全在“摸鱼”或者根本没接入，真实的流量全靠 FastAPI 单节点同步阻塞硬抗。
 
 
+
 ```mermaid
 graph TD
     subgraph "前端 (React + Vite) - 脆弱的状态缝合怪"
@@ -29,7 +30,9 @@ graph TD
         SQLAgent --> Reviewer[AST 拦截与查询]
         Reviewer --> BIRender[ECharts JSON 生成]
     end
+```
 
+```mermaid
     subgraph "数据底座 - 存在单点故障风险"
         PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
         MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
