@@ -9,40 +9,34 @@
 
 
 ```mermaid
+
 graph TD
-    %% 前端层 - 简化节点标签，避免特殊字符直接出现在节点定义中
-    subgraph 前端层
+    subgraph Frontend ["前端 (React + Vite) - 脆弱的状态缝合怪"]
         UI[UI 三栏布局]
         FS[FortuneSheet 表格] -->|防抖延迟| API_Save
         Chat[DeepSeek Copilot] -->|同步阻塞调用| API_Chat
         Charts[ECharts 动态渲染]
     end
 
-    %% 网关层 - 简化含特殊字符的节点，缩短连接标签
-    subgraph 网关层
-        API_Save[保存表格接口] --> PG[(PostgreSQL)]
-        API_Chat[聊天接口] --> LangGraph
-        API_WS[WebSocket接口] -.-> |未启用的废代码| Redis_PubSub
-        API_Upload[文件上传接口] --> MemDB[(内存知识库)]
+    subgraph Gateway ["网关层 (FastAPI) - 随时会被打满的单点"]
+        API_Save[POST /sheet/save/] --> PG[(PostgreSQL)]
+        API_Chat[POST /chat/] --> LangGraph
+        API_WS[WS /ws/{id}] -.-> |写了但没用的废代码| Redis_PubSub
+        API_Upload[POST /upload/] --> MemDB[(玩具级内存知识库)]
     end
 
-    %% Agent层 - 保持逻辑不变，简化节点命名
-    subgraph Agent层
-        LangGraph --> Planner[意图路由]
-        Planner --> SQLAgent[SQL生成]
-        SQLAgent --> Reviewer[SQL校验]
-        Reviewer --> BIRender[图表配置生成]
+    subgraph AgentLayer ["Agent 层 (LangGraph) - 缓慢的推理黑盒"]
+        LangGraph --> Planner[意图路由: 画图/改表/QA]
+        Planner --> SQLAgent[SQL 生成]
+        SQLAgent --> Reviewer[AST 拦截与查询]
+        Reviewer --> BIRender[ECharts JSON 生成]
     end
 
-    %% 数据底座 - 简化节点标签，避免特殊字符
-    subgraph 数据底座
-        PG[(PostgreSQL - OLTP)] -.-> |待开发同步| DuckDB[(DuckDB - OLAP)]
-        MemDB -.-> |待集成Qdrant| RAG[检索增强]
+    subgraph Database ["数据底座 - 存在单点故障风险"]
+        PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
+        MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
     end
 
-    %% 补充注释（可选，不影响渲染）
-    note1:::note style note1 fill:#fff,stroke:#666,stroke-width:1px
-    note1[前端：React+Vite 状态耦合；网关：FastAPI 单点风险；Agent：LangGraph 推理慢；数据层：单点故障风险]
 
 ```
 
@@ -104,6 +98,7 @@ Plaintext
 
 🎯 结论
 这是一个典型的“为了证明可行性而牺牲一切工程严谨性”的堆砌产物。如果作为毕业设计或者技术验证原型，它勉强够格；如果想拿去商业化或应对真实的复杂业务，建议直接 rm -rf 从头重构基础设施。
+
 
 
 
