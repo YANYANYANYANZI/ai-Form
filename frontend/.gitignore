@@ -1,0 +1,68 @@
+# ==========================================
+#  1. 环境变量与机密文件
+# ==========================================
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# ==========================================
+#  2. Python & 后端核心 (FastAPI / Celery)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+#  3. Node.js & 前端 (Vite / React)
+# ==========================================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/dist-ssr/
+frontend/*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+#  4. 数据库、缓存与上传文件 (DuckDB / RAG文件)
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+*.wal
+*.parquet
+/uploads/
+/backend/data/
+*.pdf  # 测试 PDF
+
+
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Trash-*
