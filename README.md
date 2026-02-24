@@ -35,13 +35,7 @@ graph TD
         PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
         MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
     end
-```
 
-```mermaid
-    subgraph "数据底座 - 存在单点故障风险"
-        PG[(PostgreSQL - OLTP)] -.-> |企图同步但还没写| DuckDB[(DuckDB - OLAP)]
-        MemDB -.-> |企图用 Qdrant 但目前只是个 List| RAG
-    end
 ```
 
 ## 📂 目录结构树与文件内部剖析 (Directory Structure & Code Debt)
