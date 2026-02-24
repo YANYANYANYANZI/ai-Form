@@ -1,13 +1,13 @@
-🗑️ ai-Form: 披着“企业级”外衣的半成品 AI-BI 工作区
-⚠️ 极其严肃的警告 (WARNING)
+# 🗑️ ai-Form: 披着“企业级”外衣的半成品 AI-BI 工作区
+## ⚠️ 极其严肃的警告 (WARNING)
 别被文档里吹嘘的“Multi-Agent”、“HTAP读写分离”、“CQRS架构”骗了。目前这只是一个用胶水代码、硬编码和 setTimeout 勉强粘合起来的 MVP（最小可行性玩具）。
 本系统目前极度脆弱，毫无鲁棒性可言，毫无高并发承载能力。绝对不要将其部署到任何生产环境中，否则你的数据将在大模型的幻觉和前端的幽灵重渲染中灰飞烟灭。
 
-🏗️ 所谓“完整”的架构图 (Architecture Illusion)
+## 🏗️ 所谓“完整”的架构图 (Architecture Illusion)
 这是一张画大饼的架构图。图上画得很美，但实际上中间件（Celery/Redis/DuckDB）目前全在“摸鱼”或者根本没接入，真实的流量全靠 FastAPI 单节点同步阻塞硬抗。
 
 
-```
+```mermaid
 graph TD
     subgraph 前端 (React + Vite) - 脆弱的状态缝合怪
         UI[UI 三栏布局]
@@ -63,7 +63,7 @@ graph TD
     end
 ```
 
-📂 目录结构树与文件内部剖析 (Directory Structure & Code Debt)
+## 📂 目录结构树与文件内部剖析 (Directory Structure & Code Debt)
 不要被看似规范的 DDD（领域驱动设计）目录骗了。里面充斥着过度耦合的逻辑和待重构的技术债。
 ```
 Plaintext
@@ -121,3 +121,4 @@ Plaintext
 
 🎯 结论
 这是一个典型的“为了证明可行性而牺牲一切工程严谨性”的堆砌产物。如果作为毕业设计或者技术验证原型，它勉强够格；如果想拿去商业化或应对真实的复杂业务，建议直接 rm -rf 从头重构基础设施。
+
